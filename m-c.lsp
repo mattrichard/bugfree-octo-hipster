@@ -7,6 +7,12 @@
   (format t "Start state had less missionaries than cannibals. No solution")
 )
 
+(defun is-state-valid (state)
+	"Checks if the given state is valid. The state is invalid if there is more
+         cannibals than missionaries on either bank."
+	(if (and (>= (first state) (second state)) (>= (third state) (fourth state))) t NIL)
+)
+
 #|This is the recursive depth first search
  | params:  int leftside
  | 	    int rightside
