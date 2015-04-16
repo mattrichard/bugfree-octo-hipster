@@ -20,6 +20,15 @@
 (defun DFS (leftSide rightSide boat)
  	(when (= rightSide (+ m c ))); base case of when all m and c are on the right side
 
+; all possible moves are:
+; move 1 m to other bank
+; move 1 c to other bank
+; move 1 m, 1 c to other bank
+; move 2 m to other bank
+; move 2 c to other bank
+
+; check if new states are valid or have already been visited
+; then call dfs on remaining valid states
 )
 
 ;Define start state of DFS - 3m 3c on left side 0 on right, boat is on -1 (left bank)
