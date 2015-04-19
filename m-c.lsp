@@ -7,11 +7,11 @@
 )
 
 (defun print-result (result)
-        (print "left bank      right bank     canoe     last move")
-        (print "---------      ----------     -----     ---------")
+        (format t "left bank      right bank     canoe     last move~%")
+        (format t "---------      ----------     -----     ---------~%")
 
         (dolist (r result)
-                (format t "~d M, ~d C      ~d M, ~d C       ~a"
+                (format t "~d M, ~d C      ~d M, ~d C       ~a~%"
                         (first r) (second r) (third r) (fourth r) (if (= 1 (fifth r)) "left" "right"))
         )
 )
@@ -29,7 +29,7 @@
         )
 )
 
-defun move-m (state n)
+(defun move-m (state n)
 	"Moves n amount of missionaries to the other side of the river."
 	(let ((next-state (copy-list state)))
 		(if (= (fifth state) 1)
@@ -114,24 +114,36 @@ defun move-m (state n)
 	(push current-state visited-path)
 	(push current-state solution-path)
 
+
 	;GOAL STATE
  	(when (and (= (first current-state) 0) (= (second current-state) 0)); base case of when all m and c are on the right side
-		(return-from dfs t))
+		(return-from dfs solution-path))
 
-	(let ((next-states (generate-next-states current-state)))
+	(let ((next-states (generate-next-states current-state))
+	      (result ()))
+		
 		;get rid of invalid states and already visited states
-		(dolist (state next-states)
+		(do ((i 0 (1+ i)))
+		    ((>= i (length next-states)))
 
-			(if (member state visited-path); if state has already been visited
-				(delete state next-states)
-				(format t "removed state already visited"))
+			(if (member (nth i next-states) visited-path :test #'equal); if state has already been visited
+				(let()
+					;(format t "removed state already visited: ~a" (nth i next-states))
+					(setf next-states (remove (nth i next-states) next-states))
+					(decf i)
+				)
 			
-			(if (not(is-state-valid state)); if state is invalid
-				(delete state next-states)
-				(format t "removed invalid state"))
+			
+				(when (not (is-state-valid (nth i next-states))); if state is invalid
+					;(format t "removed invalid state: ~a"(nth i next-states))
+					(setf next-states (remove (nth i next-states) next-states))
+					(decf i))
+			)
 		)
 		(dolist (state next-states)
-			(dfs state visited-path solution-path)
+			(setf result (dfs state visited-path solution-path))
+			(when (not (null result))
+				(return-from dfs result))
 		)
 	)
 )
@@ -151,7 +163,9 @@ defun move-m (state n)
 	(let ((state (list m c 0 0 1))
 		(solution  (list))
 		(visitedPath (list)))
-		(dfs state visitedPath solution);
+		(setf solution (reverse (dfs state visitedPath solution)))
+		(print-result solution)
+		(print solution)
 	)
 )
 
