@@ -121,7 +121,9 @@
 (defun m-c (m c)
 
 	(if (< m c) (m<c-usage))
-	
+	(let (solution) (list m c 0 0 1)
+		(dfs solution)
+	)
 )
 
 (defun main ()
