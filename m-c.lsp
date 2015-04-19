@@ -9,7 +9,11 @@
 (defun is-state-valid (state)
 	"Checks if the given state is valid. The state is invalid if there is more
          cannibals than missionaries on either bank."
-	(if (and (>= (first state) (second state)) (>= (third state) (fourth state))) t NIL)
+	(cond
+		((or (minusp (first state)) (minusp (second state)) (minusp (third state)) (minusp (fourth state))) NIL)
+		((and (>= (first state) (second state)) (>= (third state) (fourth state))) t)
+		(t NIL)
+	)
 )
 
 (defun move-m (state n)
