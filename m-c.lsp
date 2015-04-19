@@ -97,20 +97,28 @@
 
 #|This is the recursive depth first search |#
 (defun DFS (current-state visited-path solution-path)
- 	(when (= leftSide 0)); base case of when all m and c are on the right side
+
+	(push current-state visited-path)
+	(push current-state solution-path)
+
+	;GOAL STATE
+ 	(when (and (= (first current-state) 0) (= (second current-state) 0)); base case of when all m and c are on the right side
+		(return-from dfs t))
 
 	(let ((next-states (generate-next-states current-state)))
 		;get rid of invalid states and already visited states
-		(do-list (state next-states)
+		(dolist (state next-states)
 
 			(if (member state visited-path); if state has already been visited
-				(delete state next-states))
+				(delete state next-states)
+				(format t "removed state already visited"))
 			
 			(if (not(is-state-valid state)); if state is invalid
-				(delete state next-states))
+				(delete state next-states)
+				(format t "removed invalid state"))
 		)
-		(do-list (state next-states)
-			(dfs state)
+		(dolist (state next-states)
+			(dfs state visited-path solution-path)
 		)
 	)
 )
@@ -127,9 +135,9 @@
 (defun m-c (m c)
 
 	(if (< m c) (m<c-usage))
-	(let ((solution (list m c 0 0 1)))
-		(state (copy-list solution))
-		(visitedPath (copy-list solution))
+	(let ((state (list m c 0 0 1))
+		(solution  (list))
+		(visitedPath (list)))
 		(dfs state visitedPath solution);
 	)
 )
