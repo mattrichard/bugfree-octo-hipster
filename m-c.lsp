@@ -2,7 +2,6 @@
   (format t "Usage: (m-c m c)")
 )
 
-
 (defun m<c-usage ()
   (format t "Start state had less missionaries than cannibals. No solution")
 )
@@ -92,16 +91,13 @@
 	)
 )
 
-#|This is the recursive depth first search
- | params:  int leftside
- | 	    int rightside
- | 	    int boat? |#
-(defun DFS (leftSide rightSide boat)
- 	(when (= rightSide (+ m c ))); base case of when all m and c are on the right side
+#|This is the recursive depth first search |#
+(defun DFS (leftSide)
+ 	(when (= leftSide 0)); base case of when all m and c are on the right side
 
 	(let ((next-states (generate-next-states current-state)))
 		(do-list (state next-states)
-			; TODO: remove invalid states and states that have alread been visited
+			;TODO: remove invalid states and states that have already been visited
 		)
 		(do-list (state next-states)
 			(dfs state)
@@ -120,10 +116,8 @@
 
 (defun m-c (m c)
 
-;	(parse-integer m) ; NEED PARSE-INTEGER TO CONVERT CMND LINE ARGS FROM STRINGS TO INTS
-;	(parse-integer c)	
 	(if (< m c) (m<c-usage))
-
+	
 )
 
 (defun main ()
