@@ -6,17 +6,30 @@
   (format t "Start state had less missionaries than cannibals. No solution")
 )
 
-(defun is-state-valid (state)
-	"Checks if the given state is valid. The state is invalid if there is more
-         cannibals than missionaries on either bank."
-	(cond
-		((or (minusp (first state)) (minusp (second state)) (minusp (third state)) (minusp (fourth state))) NIL)
-		((and (>= (first state) (second state)) (>= (third state) (fourth state))) t)
-		(t NIL)
-	)
+(defun print-result (result)
+        (print "left bank      right bank     canoe     last move")
+        (print "---------      ----------     -----     ---------")
+
+        (dolist (r result)
+                (format t "~d M, ~d C      ~d M, ~d C       ~a"
+                        (first r) (second r) (third r) (fourth r) (if (= 1 (fifth r)) "left" "right"))
+        )
 )
 
-(defun move-m (state n)
+(defun is-state-valid (state)
+        "Checks if the given state is valid. The state is invalid if there is more
+         cannibals than missionaries on either bank."
+        (cond
+                ((or (minusp (first state)) (minusp (second state)) (minusp (third state)) (minusp (fourth state))) NIL)
+                ((and
+                        (or (>= (first state) (second state)) (zerop (first state)))
+                        (or (>= (third state) (fourth state)) (zerop (third state))))
+                        t)
+                (t NIL)
+        )
+)
+
+defun move-m (state n)
 	"Moves n amount of missionaries to the other side of the river."
 	(let ((next-state (copy-list state)))
 		(if (= (fifth state) 1)
