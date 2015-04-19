@@ -13,6 +13,85 @@
 	(if (and (>= (first state) (second state)) (>= (third state) (fourth state))) t NIL)
 )
 
+(defun move-m (state n)
+	"Moves n amount of missionaries to the other side of the river."
+	(let ((next-state (copy-list state)))
+		(if (= (fifth state) 1)
+			; Boat is on the right bank
+			(let ()
+				(setf (first next-state) (- (first next-state) n))
+				(setf (third next-state) (+ (third next-state) n))
+			)
+			; Boat is on the left bank
+			(let ()
+				(setf (first next-state) (+ (first next-state) n))
+				(setf (third next-state) (- (third next-state) n))
+			)
+		)
+		; Move the boat to the other side of the river
+		(setf (fifth next-state) (* (fifth next-state) -1))
+		(return-from move-m next-state)
+	)
+)
+
+(defun move-c (state n)
+	"Moves n amount of cannibals to the other side of the river."
+	(let ((next-state (copy-list state)))
+		(if (= (fifth state) 1)
+			; Boat is on the right bank
+			(let ()
+				(setf (second next-state) (- (second next-state) n))
+				(setf (fourth next-state) (+ (fourth next-state) n))
+			)
+			; Boat is on the left bank
+			(let ()
+				(setf (second next-state) (+ (second next-state) n))
+				(setf (fourth next-state) (- (fourth next-state) n))
+			)
+		)
+		; Move the boat to the other side of the river
+		(setf (fifth next-state) (* (fifth next-state) -1))
+		(return-from move-c next-state)
+	)
+)
+
+(defun move-m-c (state)
+	"Move one cannibal and one missionary to the other side of the river."
+	(let ((next-state (copy-list state)))
+		(if (= (fifth state) 1)
+			; Boat is on the right bank
+			(let ()
+				(setf (first next-state) (1- (first next-state)))
+				(setf (second next-state) (1- (second next-state)))
+				(setf (third next-state) (1+ (third next-state)))
+				(setf (fourth next-state) (1+ (fourth next-state)))
+			)
+			; Boat is on the left bank
+			(let ()
+				(setf (first next-state) (1+ (first next-state)))
+				(setf (second next-state) (1+ (second next-state)))
+				(setf (third next-state) (1- (third next-state)))
+				(setf (fourth next-state) (1- (fourth next-state)))
+			)
+		)
+		; Move the boat to the other side of the river
+		(setf (fifth next-state) (* (fifth next-state) -1))
+		(return-from move-m-c next-state)
+	)
+)
+
+(defun generate-next-states (state)
+	"Generates a list of all possible next states."
+	(let ((next-states ()))
+		(append (list (move-m state 1))
+			(list (move-m state 2))
+			(list (move-c state 1))
+			(list (move-c state 2))
+			(list (move-m-c state))
+		)
+	)
+)
+
 #|This is the recursive depth first search
  | params:  int leftside
  | 	    int rightside
@@ -20,15 +99,14 @@
 (defun DFS (leftSide rightSide boat)
  	(when (= rightSide (+ m c ))); base case of when all m and c are on the right side
 
-; all possible moves are:
-; move 1 m to other bank
-; move 1 c to other bank
-; move 1 m, 1 c to other bank
-; move 2 m to other bank
-; move 2 c to other bank
-
-; check if new states are valid or have already been visited
-; then call dfs on remaining valid states
+	(let ((next-states (generate-next-states current-state)))
+		(do-list (state next-states)
+			; TODO: remove invalid states and states that have alread been visited
+		)
+		(do-list (state next-states)
+			(dfs state)
+		)
+	)
 )
 
 ;Define start state of DFS - 3m 3c on left side 0 on right, boat is on -1 (left bank)
