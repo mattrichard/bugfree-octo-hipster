@@ -10,13 +10,42 @@
 
 ; prints the formatted solution list
 (defun print-result (result)
+	(format t "~d Missionaries and ~d Cannibals:~%~%" (first (first result)) (second (first result)))
+
         (format t "left bank      right bank     canoe     last move~%")
         (format t "---------      ----------     -----     ---------~%")
 
-        (dolist (r result)
-                (format t "~d M, ~d C      ~d M, ~d C       ~a~%"
-                        (first r) (second r) (third r) (fourth r) (if (= 1 (fifth r)) "left" "right"))
-        )
+	(let ((moves ()))
+		; create a list of moves to be used to generate the last move string
+		(do ((i 0 (1+ i)))
+		    ((>= i (length result)))
+			(if (= i 0)
+				(setf moves (append moves (list NIL)))
+				(let ()
+					(setf moves (append moves (list (mapcar #'- (nth i result) (nth (1- i) result)))))
+				)
+			)
+		)
+
+		; output results in a nice format
+	        (do ((i 0 (1+ i)))
+		    ((>= i (length result)))
+                	(format t "~15,a~15,a~10,a~5,a~%"
+        	                (format nil "~d M, ~d C" (first (nth i result)) (second (nth i result)))
+        	                (format nil "~d M, ~d C" (third (nth i result)) (fourth (nth i result)))
+				(if (= 1 (fifth (nth i result))) "left" "right")
+				(if (null (nth i moves))
+					"start position"
+					; generate last move string
+					(format nil "move ~a M, ~a C, ~a"
+						(abs (first (nth i moves)))
+						(abs (second (nth i moves)))
+						(if (minusp (fifth (nth i moves))) "left to right" "right to left")
+					)
+				)
+			)
+	        )
+	)
 )
 
 ; checks if the paramater state is a valid state
