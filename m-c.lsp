@@ -1,3 +1,24 @@
+#|-----------------Missionaries and Cannibals-------------------
+ |
+ | Authors:	Matthew Richard, Mackenzie Smith
+ | Class:	CSC 461 - Programming Languages
+ | Professor: 	Dr. John Weiss  	
+ |
+ | Description: This program is writen in Lisp and uses a 
+ | 		recursive depth first search to find a solution
+ | 		path of the missionaries and cannibals problem.
+ |
+ | 		At the command line the user is asked to input
+ | 		a number of missionaries and cannibals.  The
+ | 		resulting output is the first solution path
+ | 		the DFS discovers.
+ |
+ | Usage:	clisp m-c.lsp x y
+ | 		x = number of missionaries
+ | 		y = number of cannibals
+ |
+ | |#
+
 ; print a usage statement
 (defun m-c-usage ()
   (format t "Usage: (m-c m c)")
@@ -146,6 +167,11 @@
 
 #|This is the recursive depth first search |#
 (defun DFS (current-state visited-path solution-path)
+	"Finds the first solution path of a given start state of the m-c problem
+	 Parameters:
+		current-state = state that is currently being processed
+		visited-path  = list of all states already visited
+		solution-path = list containing the solution path"
 
 	(push current-state visited-path)
 	(push current-state solution-path)
@@ -155,6 +181,7 @@
  	(when (and (= (first current-state) 0) (= (second current-state) 0)); base case of when all m and c are on the right side
 		(return-from dfs solution-path))
 
+	; generates a list "next-states" containing all states in the next iteration
 	(let ((next-states (generate-next-states current-state))
 	      (result ()))
 		
@@ -176,6 +203,7 @@
 					(decf i))
 			)
 		)
+		; loop through list of next-states calling dfs on each state
 		(dolist (state next-states)
 			(setf result (dfs state visited-path solution-path))
 			(when (not (null result))
@@ -184,23 +212,16 @@
 	)
 )
 
-;Define start state of DFS - 3m 3c on left side 0 on right, boat is on -1 (left bank)
-;(defun startState () (3 3 0 0 -1))
-
-;Define a goal state where 3m and 3c are on right side
-(defun goalState? (state) 
- 	(when (and(= (third state) m)(= (fourth state) c))); third is # of m on right side
-						     ; fourth is # of c on right side
-)
-
 ; the real main function where all the local solution lists and visted are set. calls DFS
 (defun m-c (m c)
-
+	"Initializes solution and visited path as well as start state.  Calls DFS. Prints result"
 	(if (< m c) (m<c-usage))
+	
+	;Initializes start state to command line values
 	(let ((state (list m c 0 0 1))
-		(solution  (list))
-		(visitedPath (list)))
-		(setf solution (reverse (dfs state visitedPath solution)))
+		(solution  (list)); solution path
+		(visitedPath (list))); visited path
+		(setf solution (reverse (dfs state visitedPath solution))); sets solution to the result of DFS
 		(print-result solution)
 		(print solution)
 	)
@@ -208,6 +229,7 @@
 
 ; main function that checks command line arguments and calls the m-c function
 (defun main ()
+	"Reads command line args, outputs usage if invalid. Passes them to m-c function."
  	(when (not (= (length *args*) 2)) (m-c-usage) (return-from main NIL))
   	(m-c (parse-integer(first *args*)) (parse-integer(second *args*)))
 
