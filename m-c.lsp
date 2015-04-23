@@ -20,17 +20,16 @@
  | |#
 
 ; print a usage statement
-(defun m-c-usage ()
-  (format t "Usage: (m-c m c)")
-)
+(defun m-c-usage () (format t "Usage: (m-c m c)"))
 
 ; prints a statement if initial state is invalid
 (defun m<c-usage ()
-  (format t "Start state had less missionaries than cannibals. No solution")
+	(format t "Start state had less missionaries than cannibals. No solution")
 )
 
 ; prints the formatted solution list
 (defun print-result (result)
+	"Given a solution path, prints the results of the missionaries and cannibals problem."
 	(format t "~d Missionaries and ~d Cannibals:~%~%" (first (first result)) (second (first result)))
 
         (format t "left bank      right bank     canoe     last move~%")
@@ -88,12 +87,12 @@
 	"Moves n amount of missionaries to the other side of the river."
 	(let ((next-state (copy-list state)))
 		(if (= (fifth state) 1)
-			; Boat is on the right bank
+			; Boat is on the left bank
 			(let ()
 				(setf (first next-state) (- (first next-state) n))
 				(setf (third next-state) (+ (third next-state) n))
 			)
-			; Boat is on the left bank
+			; Boat is on the right bank
 			(let ()
 				(setf (first next-state) (+ (first next-state) n))
 				(setf (third next-state) (- (third next-state) n))
@@ -109,12 +108,12 @@
 	"Moves n amount of cannibals to the other side of the river."
 	(let ((next-state (copy-list state)))
 		(if (= (fifth state) 1)
-			; Boat is on the right bank
+			; Boat is on the left bank
 			(let ()
 				(setf (second next-state) (- (second next-state) n))
 				(setf (fourth next-state) (+ (fourth next-state) n))
 			)
-			; Boat is on the left bank
+			; Boat is on the right bank
 			(let ()
 				(setf (second next-state) (+ (second next-state) n))
 				(setf (fourth next-state) (- (fourth next-state) n))
@@ -126,19 +125,18 @@
 	)
 )
 
-
 (defun move-m-c (state)
 	"Move one cannibal and one missionary to the other side of the river."
 	(let ((next-state (copy-list state)))
 		(if (= (fifth state) 1)
-			; Boat is on the right bank
+			; Boat is on the left bank
 			(let ()
 				(setf (first next-state) (1- (first next-state)))
 				(setf (second next-state) (1- (second next-state)))
 				(setf (third next-state) (1+ (third next-state)))
 				(setf (fourth next-state) (1+ (fourth next-state)))
 			)
-			; Boat is on the left bank
+			; Boat is on the right bank
 			(let ()
 				(setf (first next-state) (1+ (first next-state)))
 				(setf (second next-state) (1+ (second next-state)))
@@ -151,7 +149,6 @@
 		(return-from move-m-c next-state)
 	)
 )
-
 
 (defun generate-next-states (state)
 	"Generates a list of all possible next states."
@@ -232,8 +229,6 @@
 	"Reads command line args, outputs usage if invalid. Passes them to m-c function."
  	(when (not (= (length *args*) 2)) (m-c-usage) (return-from main NIL))
   	(m-c (parse-integer(first *args*)) (parse-integer(second *args*)))
-
-	
 )
 
 (main)
