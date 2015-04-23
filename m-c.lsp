@@ -1,11 +1,14 @@
+; print a usage statement
 (defun m-c-usage ()
   (format t "Usage: (m-c m c)")
 )
 
+; prints a statement if initial state is invalid
 (defun m<c-usage ()
   (format t "Start state had less missionaries than cannibals. No solution")
 )
 
+; prints the formatted solution list
 (defun print-result (result)
         (format t "left bank      right bank     canoe     last move~%")
         (format t "---------      ----------     -----     ---------~%")
@@ -16,6 +19,7 @@
         )
 )
 
+; checks if the paramater state is a valid state
 (defun is-state-valid (state)
         "Checks if the given state is valid. The state is invalid if there is more
          cannibals than missionaries on either bank."
@@ -29,6 +33,7 @@
         )
 )
 
+; moves n amount of missionaries to the other side of the river
 (defun move-m (state n)
 	"Moves n amount of missionaries to the other side of the river."
 	(let ((next-state (copy-list state)))
@@ -71,6 +76,7 @@
 	)
 )
 
+
 (defun move-m-c (state)
 	"Move one cannibal and one missionary to the other side of the river."
 	(let ((next-state (copy-list state)))
@@ -95,6 +101,7 @@
 		(return-from move-m-c next-state)
 	)
 )
+
 
 (defun generate-next-states (state)
 	"Generates a list of all possible next states."
@@ -157,6 +164,7 @@
 						     ; fourth is # of c on right side
 )
 
+; the real main function where all the local solution lists and visted are set. calls DFS
 (defun m-c (m c)
 
 	(if (< m c) (m<c-usage))
@@ -169,6 +177,7 @@
 	)
 )
 
+; main function that checks command line arguments and calls the m-c function
 (defun main ()
  	(when (not (= (length *args*) 2)) (m-c-usage) (return-from main NIL))
   	(m-c (parse-integer(first *args*)) (parse-integer(second *args*)))
