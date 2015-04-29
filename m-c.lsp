@@ -212,7 +212,7 @@
 ; the real main function where all the local solution lists and visted are set. calls DFS
 (defun m-c (m c)
 	"Initializes solution and visited path as well as start state.  Calls DFS. Prints result"
-	(if (< m c) (m<c-usage) (return-from m-c NIL))
+	(when (< m c) (m<c-usage) (return-from m-c NIL))
 	
 	;Initializes start state to command line values
 	(let ((state (list m c 0 0 1))
@@ -220,7 +220,6 @@
 		(visitedPath (list))); visited path
 		(setf solution (reverse (dfs state visitedPath solution))); sets solution to the result of DFS
 		(print-result solution)
-		(print solution)
 	)
 )
 
